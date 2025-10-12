@@ -1,94 +1,116 @@
-# 10x Astro Starter
+# 10x-cards
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+[![Project Status: In Development](https://img.shields.io/badge/status-in%20development-yellowgreen.svg)](https://github.com/jakubburkiewicz/10x-project)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+A modern web application for creating and managing educational flashcards, supercharged with AI.
+
+## Table of Contents
+
+- [Project Description](#project-description)
+- [Tech Stack](#tech-stack)
+- [Getting Started Locally](#getting-started-locally)
+- [Available Scripts](#available-scripts)
+- [Project Scope](#project-scope)
+- [Project Status](#project-status)
+- [License](#license)
+
+## Project Description
+
+**10x-cards** is designed to help users quickly create and manage sets of educational flashcards. The core feature of the application is its ability to leverage Large Language Models (LLMs) to automatically generate flashcard suggestions from any pasted text, such as a textbook chapter or an article.
+
+The primary goal is to solve the problem of manual, time-consuming flashcard creation, allowing students and learners to build high-quality study materials efficiently and embrace effective learning methods like spaced repetition with minimal effort.
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+This project uses a modern, full-stack technology set:
 
-## Prerequisites
+-   **Frontend**:
+    -   [Astro 5](https://astro.build/): For building fast, content-focused websites with a minimal JavaScript footprint.
+    -   [React 19](https://react.dev/): For creating interactive and dynamic user interface components.
+    -   [TypeScript 5](https://www.typescriptlang.org/): For strong static typing and improved developer experience.
+    -   [Tailwind CSS 4](https://tailwindcss.com/): A utility-first CSS framework for rapid UI development.
+    -   [Shadcn/ui](https://ui.shadcn.com/): A library of beautifully designed and accessible React components.
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+-   **Backend**:
+    -   [Supabase](https://supabase.io/): An open-source Firebase alternative providing a PostgreSQL database, authentication, and a Backend-as-a-Service (BaaS) platform.
 
-## Getting Started
+-   **AI Integration**:
+    -   [OpenRouter.ai](https://openrouter.ai/): A service that provides access to a wide range of LLMs (from OpenAI, Anthropic, Google, etc.) for generating flashcard content.
 
-1. Clone the repository:
+-   **CI/CD & Hosting**:
+    -   [GitHub Actions](https://github.com/features/actions): For continuous integration and deployment pipelines.
+    -   [DigitalOcean](https://www.digitalocean.com/): For hosting the application via a Docker image.
 
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
+## Getting Started Locally
 
-2. Install dependencies:
+To set up and run the project on your local machine, follow these steps.
 
-```bash
-npm install
-```
+### Prerequisites
 
-3. Run the development server:
+-   **Node.js**: The project requires a specific version of Node.js. It's recommended to use a version manager like `nvm`.
+    ```bash
+    # Switch to the correct Node.js version
+    nvm use
+    ```
+    The required version is specified in the `.nvmrc` file (`22.14.0`).
 
-```bash
-npm run dev
-```
+-   **Environment Variables**: You will need to create a `.env` file in the root of the project to store your credentials for Supabase and OpenRouter. An example file `.env.example` should be created and filled out.
 
-4. Build for production:
+### Installation & Setup
 
-```bash
-npm run build
-```
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/jakubburkiewicz/10x-project.git
+    cd 10x-project
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+    The application will be available at `http://localhost:4321`.
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+The following scripts are available in the `package.json`:
 
-## Project Structure
+-   `npm run dev`: Starts the Astro development server with hot-reloading.
+-   `npm run build`: Builds the application for production.
+-   `npm run preview`: Previews the production build locally.
+-   `npm run lint`: Lints the codebase using ESLint to find and report issues.
+-   `npm run lint:fix`: Automatically fixes linting issues.
+-   `npm run format`: Formats the code using Prettier.
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+## Project Scope
 
-## AI Development Support
+### Key Features
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+-   **AI-Powered Flashcard Generation**: Users can paste text and receive AI-generated question-and-answer flashcards.
+-   **Manual Flashcard Management**: Full CRUD (Create, Read, Update, Delete) functionality for flashcards.
+-   **User Authentication**: Secure user registration and login to manage personal flashcard sets.
+-   **Spaced Repetition Integration**: A simple mechanism to schedule flashcards for review based on a ready-to-use algorithm.
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+### Out of Scope (for MVP)
 
-### Cursor IDE
+-   Advanced, custom-built spaced repetition algorithms.
+-   Gamification features.
+-   Native mobile applications (the project is web-only for now).
+-   Importing documents in formats like PDF or DOCX.
+-   A public-facing API.
+-   Sharing flashcards between users.
 
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
+## Project Status
 
-### GitHub Copilot
+**Status**: In Development
 
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
-
-### Windsurf
-
-The `.windsurfrules` file contains AI configuration for Windsurf.
-
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+This project is currently in the Minimum Viable Product (MVP) development phase. The core functionalities are being built, and the application is not yet ready for production use.
 
 ## License
 
-MIT
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
