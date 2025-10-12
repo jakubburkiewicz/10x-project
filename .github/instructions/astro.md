@@ -1,7 +1,7 @@
 ---
-description: 
-globs: *.astro
-alwaysApply: false
+title: Guidelines for Astro
+description: Guidelines for Astro
+glob: ["**/*.astro"]
 ---
 ### Guidelines for Astro
 

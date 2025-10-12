@@ -1,7 +1,7 @@
 ---
-description: 
-globs: 
-alwaysApply: false
+title: Database Migration Creation
+description: Guidelines for creating Supabase database migrations.
+glob: ["**/supabase/migrations/*.sql"]
 ---
 # Database: Create migration
 

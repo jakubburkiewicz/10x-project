@@ -1,7 +1,7 @@
 ---
-description: 
-globs: 
-alwaysApply: false
+title: Shadcn UI Components
+description: This project uses @shadcn/ui for its user interface components.
+glob: ["**/*.tsx", "**/*.astro"]
 ---
 # Shadcn UI Components
 

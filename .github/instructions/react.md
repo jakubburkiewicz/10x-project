@@ -1,7 +1,7 @@
 ---
-description: 
-globs: *.tsx
-alwaysApply: false
+title: React Development Guidelines
+description: Best practices for developing with React.
+glob: ["**/*.tsx"]
 ---
 ### Guidelines for React
 

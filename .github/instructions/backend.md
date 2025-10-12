@@ -1,7 +1,7 @@
 ---
-description: 
-globs: src/db/*.ts,src/middleware/*.ts,src/lib/*.ts
-alwaysApply: false
+title: Backend and Database
+description: Guidelines for Backend and Database
+glob: ["**/src/db/*.ts", "**/src/middleware/*.ts", "**/src/lib/*.ts"]
 ---
 ### Backend and Database
 

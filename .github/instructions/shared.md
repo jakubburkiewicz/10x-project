@@ -1,7 +1,7 @@
 ---
-description: 
-globs: 
-alwaysApply: true
+title: AI Rules for {app-name}
+description: {project-description}
+glob: ["**/*"]
 ---
 # AI Rules for {app-name}
 

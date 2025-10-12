@@ -1,7 +1,7 @@
 ---
-description: 
-globs: *.tsx,*.astro
-alwaysApply: false
+title: Frontend Development Guidelines
+description: General guidelines for frontend development, including styling and accessibility.
+glob: ["**/*.tsx", "**/*.astro"]
 ---
 ## Frontend
 
