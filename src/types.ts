@@ -67,6 +67,16 @@ export type GenerateCardsCommand = z.infer<typeof GenerateCardsCommandSchema>;
 export type CardSuggestionDto = Pick<Card, "front" | "back">;
 
 /**
+ * ViewModel for a card suggestion in the UI.
+ * Extends the DTO with client-side state.
+ */
+export type CardSuggestionViewModel = CardSuggestionDto & {
+  id: string; // Client-side unique identifier
+  status: "pending" | "accepted" | "rejected";
+  isEditing: boolean;
+};
+
+/**
  * DTO for the response of the `POST /api/ai/generate-cards` endpoint.
  */
 export interface GenerateCardsResponseDto {
