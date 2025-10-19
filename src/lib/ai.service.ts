@@ -1,5 +1,5 @@
-import { openRouterService } from "@/lib/openrouter.service";
-import { anthropicService } from "@/lib/anthropic.service";
+import { OpenRouterService } from "@/lib/openrouter.service";
+import { AnthropicService } from "@/lib/anthropic.service";
 import type { CardSuggestionDto, SaveGeneratedCardsCommand } from "@/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
@@ -39,6 +39,7 @@ async function generateCardSuggestions(text: string): Promise<CardSuggestionDto[
     let response;
 
     if (aiProvider === "anthropic") {
+      const anthropicService = new AnthropicService();
       response = await anthropicService.getJsonResponse({
         systemPrompt: SYSTEM_PROMPT,
         userPrompt: text,
@@ -46,6 +47,7 @@ async function generateCardSuggestions(text: string): Promise<CardSuggestionDto[
         responseSchema: SuggestionsResponseSchema,
       });
     } else {
+      const openRouterService = new OpenRouterService();
       response = await openRouterService.getJsonResponse({
         systemPrompt: SYSTEM_PROMPT,
         userPrompt: text,

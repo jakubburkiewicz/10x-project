@@ -27,7 +27,7 @@ export class OpenRouterService {
   /**
    * Buduje ciało żądania dla API OpenRouter.
    */
-  private buildRequestBody<T extends z.ZodType>(params: GetJsonResponseParams<T>): object {
+  public buildRequestBody<T extends z.ZodType>(params: GetJsonResponseParams<T>): object {
     const jsonSchema = zodToJsonSchema(params.responseSchema, {
       name: "response_schema",
       target: "jsonSchema7",
@@ -86,6 +86,3 @@ export class OpenRouterService {
     }
   }
 }
-
-// Eksport pojedynczej instancji (singleton) dla łatwego użycia w aplikacji
-export const openRouterService = new OpenRouterService();

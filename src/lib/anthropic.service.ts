@@ -32,6 +32,11 @@ export class AnthropicService {
       target: "jsonSchema7",
     });
 
+    const completeSchema = {
+      ...jsonSchema,
+      type: "object",
+    };
+
     return {
       model: params.modelName,
       system: params.systemPrompt,
@@ -41,7 +46,7 @@ export class AnthropicService {
         {
           name: "json_output",
           description: "A tool to output a JSON object matching the requested schema.",
-          input_schema: jsonSchema,
+          input_schema: completeSchema,
         },
       ],
       tool_choice: {
@@ -91,5 +96,3 @@ export class AnthropicService {
     }
   }
 }
-
-export const anthropicService = new AnthropicService();

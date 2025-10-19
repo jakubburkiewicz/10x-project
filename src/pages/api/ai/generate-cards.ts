@@ -43,7 +43,7 @@ export async function POST(context: APIContext): Promise<Response> {
     });
   } catch (error) {
     if (error instanceof LLMServiceError) {
-      return new Response(JSON.stringify({ message: "Service Unavailable" }), {
+      return new Response(JSON.stringify({ message: error.message }), {
         status: 503,
         headers: { "Content-Type": "application/json" },
       });
