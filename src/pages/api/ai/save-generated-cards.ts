@@ -7,9 +7,12 @@ export const prerender = false;
 export const POST: APIRoute = async ({ request, locals }) => {
   const { session, supabase, user } = locals;
 
+  /*
   if (!session || !user) {
     return new Response("Unauthorized", { status: 401 });
   }
+  */
+  const userId = user?.id ?? "00000000-0000-0000-0000-000000000000"; // Temporary user for testing
 
   const validationResult = SaveGeneratedCardsCommandSchema.safeParse(await request.json());
 
@@ -18,7 +21,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    const { savedCards } = await aiService.saveGeneratedCards(supabase, user.id, validationResult.data);
+    const { savedCards } = await aiService.saveGeneratedCards(supabase, userId, validationResult.data);
 
     return new Response(
       JSON.stringify({

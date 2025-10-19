@@ -8,6 +8,7 @@ export const prerender = false;
 export async function POST(context: APIContext): Promise<Response> {
   const { user } = context.locals;
 
+  /*
   if (!user) {
     return new Response(JSON.stringify({ message: "Unauthorized" }), {
       status: 401,
@@ -21,6 +22,7 @@ export async function POST(context: APIContext): Promise<Response> {
       headers: { "Content-Type": "application/json" },
     });
   }
+  */
 
   const validation = GenerateCardsCommandSchema.safeParse(await context.request.json());
 
