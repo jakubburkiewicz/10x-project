@@ -1,4 +1,5 @@
-import type { CardSuggestionDto } from "@/types";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { CardSuggestionDto, SaveGeneratedCardsCommand } from "@/types";
 
 const SYSTEM_PROMPT = `
 You are an expert in creating flashcards. Your task is to analyze the provided text and generate a list of question-and-answer pairs that can be used as flashcards for studying.
@@ -26,7 +27,7 @@ async function generateCardSuggestions(text: string): Promise<CardSuggestionDto[
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${import.meta.env.OPENROUTER_API_KEY}`,,
+        Authorization: `Bearer ${import.meta.env.OPENROUTER_API_KEY}`,
       },
       body: JSON.stringify({
         model: "openai/gpt-3.5-turbo",
@@ -63,6 +64,52 @@ async function generateCardSuggestions(text: string): Promise<CardSuggestionDto[
   }
 }
 
+async function saveGeneratedCards(supabase: SupabaseClient, userId: string, command: SaveGeneratedCardsCommand) {
+  const { acceptedCards, generatedCount, originalText } = command;
+
+  if (acceptedCards.length === 0) {
+    // Even if no cards are accepted, we should log the generation event.
+    const { error: logError } = await supabase.from("ai_generations").insert({
+      user_id: userId,
+      input_text: originalText,
+      generated_count: generatedCount,
+      accepted_count: 0,
+    });
+
+    if (logError) {
+      console.error("Error logging AI generation:", logError);
+    }
+
+    return { savedCards: [] };
+  }
+
+  const cardsToInsert = acceptedCards.map((card) => ({
+    ...card,
+    user_id: userId,
+    source: "ai" as const,
+  }));
+
+  // Perform both operations in a transaction
+  const { data, error } = await supabase.rpc("save_cards_and_log_generation", {
+    cards_to_insert: cardsToInsert,
+    generation_log: {
+      user_id: userId,
+      input_text: originalText,
+      generated_count: generatedCount,
+      accepted_count: acceptedCards.length,
+    },
+  });
+
+  if (error) {
+    console.error("Error in save_cards_and_log_generation RPC:", error);
+    throw new Error("Failed to save generated cards and log generation.");
+  }
+
+  // The RPC function will return the saved cards
+  return { savedCards: data };
+}
+
 export const aiService = {
   generateCardSuggestions,
+  saveGeneratedCards,
 };
