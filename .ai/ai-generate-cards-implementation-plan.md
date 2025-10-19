@@ -58,7 +58,7 @@ Celem tego punktu końcowego jest generowanie propozycji fiszek (pytanie-odpowie
 - **Uwierzytelnianie**: Dostęp do endpointu musi być chroniony. Middleware Astro musi weryfikować token JWT i zapewniać, że tylko zalogowani użytkownicy mogą korzystać z tej funkcji.
 - **Autoryzacja**: Każde żądanie musi być powiązane z konkretnym użytkownikiem w celu ewentualnego śledzenia i ograniczania nadużyć.
 - **Walidacja danych wejściowych**: Ścisła walidacja za pomocą Zod (`GenerateCardsCommandSchema`) chroni przed nieoczekiwanymi danymi i potencjalnymi atakami.
-- **Zarządzanie kluczami API**: Klucz do usługi LLM musi być przechowywany jako prywatna zmienna środowiskowa (np. `PRIVATE_OPENROUTER_API_KEY`) i nigdy nie może być ujawniony po stronie klienta.
+- **Zarządzanie kluczami API**: Klucz do usługi LLM musi być przechowywany jako prywatna zmienna środowiskowa (np. `OPENROUTER_API_KEY`) i nigdy nie może być ujawniony po stronie klienta.
 - **Ochrona przed nadużyciami**: Należy zaimplementować mechanizm *rate limiting* (np. 5 zapytań na godzinę na użytkownika), aby kontrolować koszty API LLM i zapobiegać atakom DoS.
 
 ## 7. Obsługa błędów
@@ -72,7 +72,7 @@ Celem tego punktu końcowego jest generowanie propozycji fiszek (pytanie-odpowie
 - **Rozmiar payloadu**: Ograniczenie długości tekstu wejściowego (10000 znaków) zapobiega wysyłaniu zbyt dużych zapytań, co mogłoby wpłynąć na wydajność i koszty.
 
 ## 9. Etapy wdrożenia
-1. **Konfiguracja zmiennych środowiskowych**: Dodać `PRIVATE_OPENROUTER_API_KEY` do pliku `.env` i zaktualizować `src/env.d.ts`.
+1. **Konfiguracja zmiennych środowiskowych**: Dodać `OPENROUTER_API_KEY` do pliku `.env` i zaktualizować `src/env.d.ts`.
 2. **Utworzenie serwisu AI**:
    - Stworzyć plik `src/lib/ai.service.ts`.
    - Zaimplementować w nim funkcję `generateCardSuggestions(text: string): Promise<CardSuggestionDto[]>`.
