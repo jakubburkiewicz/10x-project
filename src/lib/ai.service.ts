@@ -1,4 +1,5 @@
 import { openRouterService } from "@/lib/openrouter.service";
+import { anthropicService } from "@/lib/anthropic.service";
 import type { CardSuggestionDto, SaveGeneratedCardsCommand } from "@/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
@@ -34,12 +35,24 @@ export class LLMServiceError extends Error {
 
 async function generateCardSuggestions(text: string): Promise<CardSuggestionDto[]> {
   try {
-    const response = await openRouterService.getJsonResponse({
-      systemPrompt: SYSTEM_PROMPT,
-      userPrompt: text,
-      modelName: "openai/gpt-3.5-turbo",
-      responseSchema: SuggestionsResponseSchema,
-    });
+    const aiProvider = import.meta.env.AI_PROVIDER ?? "openrouter";
+    let response;
+
+    if (aiProvider === "anthropic") {
+      response = await anthropicService.getJsonResponse({
+        systemPrompt: SYSTEM_PROMPT,
+        userPrompt: text,
+        modelName: "claude-3-5-sonnet-20240620",
+        responseSchema: SuggestionsResponseSchema,
+      });
+    } else {
+      response = await openRouterService.getJsonResponse({
+        systemPrompt: SYSTEM_PROMPT,
+        userPrompt: text,
+        modelName: "openai/gpt-3.5-turbo",
+        responseSchema: SuggestionsResponseSchema,
+      });
+    }
 
     return response.suggestions;
   } catch (error) {
