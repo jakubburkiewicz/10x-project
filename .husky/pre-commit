@@ -1,1 +1,23 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running pre-commit hook..."
+
+# Run lint-staged for staged files
+echo "Running linter on staged files..."
 npx lint-staged
+if [ $? -ne 0 ]; then
+  echo "Lint-staged failed. Please fix the issues and try again. Aborting commit."
+  exit 1
+fi
+
+# Run all tests
+echo "Running tests..."
+npm test
+if [ $? -ne 0 ]; then
+  echo "Unit tests failed. Please fix the tests and try again. Aborting commit."
+  exit 1
+fi
+
+echo "Pre-commit hook finished successfully."
+
