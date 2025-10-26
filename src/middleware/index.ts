@@ -1,22 +1,37 @@
 import { createSupabaseServerInstance } from "@/db/supabase.client";
 import { defineMiddleware } from "astro:middleware";
 
-const PROTECTED_PATHS = ["/generate"];
+const PROTECTED_PATHS = ["/generate", "/cards"];
 const AUTH_PATHS = ["/login", "/register", "/forgot-password"];
 
-export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
-  const supabase = createSupabaseServerInstance({
-    cookies,
-    headers: request.headers,
-  });
+export const onRequest = defineMiddleware(async (context, next) => {
+  const { locals, cookies, url, request, redirect } = context;
+
+  const supabase = createSupabaseServerInstance({ cookies });
   locals.supabase = supabase;
-  locals.auth = {
-    getSession: supabase.auth.getSession.bind(supabase.auth),
-  };
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  locals.session = session;
+  locals.user = session?.user ?? null;
+  locals.auth = {
+    getSession: async () => ({
+      session: locals.session,
+      user: locals.user,
+    }),
+  };
+
+  if (url.pathname.startsWith("/api")) {
+    if (!locals.session) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return next();
+  }
 
   const code = url.searchParams.get("code");
 
@@ -34,13 +49,13 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
   }
 
   if (url.pathname === "/") {
-    if (user) {
+    if (locals.user) {
       return redirect("/generate");
     }
     return redirect("/login");
   }
 
-  if (user) {
+  if (locals.user) {
     if (AUTH_PATHS.includes(url.pathname)) {
       return redirect("/generate");
     }

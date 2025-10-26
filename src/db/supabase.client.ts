@@ -1,38 +1,21 @@
+import { createServerClient, createBrowserClient, type CookieOptions } from "@supabase/ssr";
 import type { AstroCookies } from "astro";
-import {
-  createServerClient,
-  createBrowserClient,
-  type CookieOptionsWithName,
-  type SupabaseClient,
-} from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/db/database.types.ts";
 
 export type { SupabaseClient };
 
-export const cookieOptions: CookieOptionsWithName = {
-  path: "/",
-  secure: true,
-  httpOnly: true,
-  sameSite: "lax",
-};
-
-function parseCookieHeader(cookieHeader: string): { name: string; value: string }[] {
-  if (!cookieHeader) return [];
-  return cookieHeader.split(";").map((cookie) => {
-    const [name, ...rest] = cookie.trim().split("=");
-    return { name, value: rest.join("=") };
-  });
-}
-
-export const createSupabaseServerInstance = (context: { headers: Headers; cookies: AstroCookies }) => {
+export const createSupabaseServerInstance = (context: { cookies: AstroCookies }) => {
   return createServerClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
-    cookieOptions,
     cookies: {
-      getAll() {
-        return parseCookieHeader(context.headers.get("Cookie") ?? "");
+      get(key: string) {
+        return context.cookies.get(key)?.value;
       },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => context.cookies.set(name, value, options));
+      set(key: string, value: string, options: CookieOptions) {
+        context.cookies.set(key, value, options);
+      },
+      remove(key: string, options: CookieOptions) {
+        context.cookies.delete(key, options);
       },
     },
   });

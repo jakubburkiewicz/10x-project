@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Toaster, toast } from "sonner";
-import type { CardsViewModel, CardDto, GetCardsResponseDto, CreateCardDto, UpdateCardCommand } from "@/types";
+import type { CardsViewModel, CardDto, CreateCardDto, UpdateCardCommand } from "@/types";
 import CardsTable from "./CardsTable";
 import CardFormDialog from "./CardFormDialog";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
@@ -33,15 +33,22 @@ const CardsView = () => {
     async (page = 1) => {
       setViewModel((prev) => ({ ...prev, isLoading: true }));
       try {
-        const response = await fetch(`/api/cards?page=${page}&pageSize=${viewModel.pagination.pageSize}`);
+        const response = await fetch(`/api/cards?page=${page}&pageSize=${viewModel.pagination.pageSize}`, {
+          credentials: "same-origin",
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch cards");
         }
-        const data: GetCardsResponseDto = await response.json();
+        const data: { data: CardDto[]; count: number } = await response.json();
         setViewModel((prev) => ({
           ...prev,
           cards: data.data,
-          pagination: data.pagination,
+          pagination: {
+            ...prev.pagination,
+            totalCount: data.count,
+            totalPages: Math.ceil(data.count / prev.pagination.pageSize),
+            currentPage: page,
+          },
           isLoading: false,
           error: null,
         }));
@@ -126,26 +133,17 @@ const CardsView = () => {
     const cardToDelete = viewModel.dialogs.cardToDelete;
     if (!cardToDelete) return;
 
-    const originalCards = [...viewModel.cards];
-
-    // Optimistic UI update
-    setViewModel((prev) => ({
-      ...prev,
-      cards: prev.cards.filter((c) => c.id !== cardToDelete.id),
-    }));
-    handleCloseDialogs();
-    toast.success("Card deleted.");
-
     try {
       const response = await fetch(`/api/cards/${cardToDelete.id}`, { method: "DELETE" });
       if (!response.ok) {
         throw new Error("Failed to delete card on the server.");
       }
+      toast.success("Card deleted.");
+      handleCloseDialogs();
+      fetchCards(viewModel.pagination.currentPage);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       toast.error(errorMessage);
-      // Rollback
-      setViewModel((prev) => ({ ...prev, cards: originalCards }));
     }
   };
 

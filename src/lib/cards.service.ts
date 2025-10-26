@@ -1,11 +1,26 @@
 import type { SupabaseClient } from "@/db/supabase.client";
-import type { CardDto, UpdateCardCommand } from "@/types";
+import type { CardDto, CreateCardDto, UpdateCardCommand } from "@/types";
 
 export class CardNotFoundError extends Error {
   constructor(message = "Card not found or you don't have access to it") {
     super(message);
     this.name = "CardNotFoundError";
   }
+}
+
+export async function createCard(cardData: CreateCardDto, userId: string, supabase: SupabaseClient): Promise<CardDto> {
+  const { data: newCard, error } = await supabase
+    .from("cards")
+    .insert({ ...cardData, user_id: userId })
+    .select("id, front, back, source, due_date, created_at, updated_at")
+    .single();
+
+  if (error) {
+    // TODO: Add proper error logging
+    throw new Error("Failed to create a new card.");
+  }
+
+  return newCard;
 }
 
 interface GetCardsParams {
@@ -24,11 +39,11 @@ interface GetCardsParams {
  * @param params - The parameters for filtering, sorting, and pagination.
  * @returns A promise that resolves to an object containing the card data and the total count.
  */
-export async function getCardsForUser(
+export async function getCards(
   supabase: SupabaseClient,
   userId: string,
   params: GetCardsParams
-): Promise<{ data: CardDto[]; totalCount: number }> {
+): Promise<{ data: CardDto[]; count: number }> {
   const { page, pageSize, source, sortBy, order } = params;
   const rangeFrom = (page - 1) * pageSize;
   const rangeTo = rangeFrom + pageSize - 1;
@@ -52,7 +67,27 @@ export async function getCardsForUser(
     throw new Error("Failed to fetch cards from the database.");
   }
 
-  return { data: data || [], totalCount: count || 0 };
+  return { data: data || [], count: count || 0 };
+}
+
+export async function getCardById(supabase: SupabaseClient, cardId: string): Promise<CardDto | null> {
+  const { data, error } = await supabase
+    .from("cards")
+    .select("id, front, back, source, due_date, created_at, updated_at")
+    .eq("id", cardId)
+    .single();
+
+  if (error) {
+    // If the error indicates that the row was not found, return null.
+    // This can happen if the card doesn't exist or RLS prevents access.
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    // For other errors, re-throw.
+    throw new Error("Failed to fetch card from the database.");
+  }
+
+  return data;
 }
 
 /**

@@ -1,6 +1,6 @@
 import type { APIContext } from "astro";
 import { z } from "zod";
-import { CardNotFoundError, getCardById, updateCard } from "@/lib/cards.service";
+import { CardNotFoundError, deleteCard, getCardById, updateCard } from "@/lib/cards.service";
 
 const CardIdSchema = z.string().uuid();
 const UpdateCardBodySchema = z
@@ -137,17 +137,32 @@ export async function PATCH({ params, request, locals }: APIContext): Promise<Re
 }
 
 export async function DELETE({ params, locals }: APIContext) {
-  const { session, supabase } = locals;
-
-  if (!session?.user) {
-    return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 });
-  }
+  const { supabase } = locals;
 
   const cardId = params.id;
+  const validationResult = CardIdSchema.safeParse(cardId);
 
-  // TODO: Validate cardId is a valid UUID
-  // TODO: Call cardsService.deleteCard
-  // TODO: Handle service response and return appropriate status codes
+  if (!validationResult.success) {
+    return new Response(JSON.stringify({ error: "Invalid card ID format. Must be a UUID." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
-  return new Response(null, { status: 204 });
+  try {
+    await deleteCard(validationResult.data, supabase);
+    return new Response(null, { status: 204 });
+  } catch (error) {
+    if (error instanceof CardNotFoundError) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    // TODO: Add proper error logging
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }
