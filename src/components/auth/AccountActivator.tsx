@@ -9,6 +9,8 @@ export const AccountActivator = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, _session) => {
+      console.log("Session:", _session);
+
       if (event === "SIGNED_IN") {
         const url = new URL(window.location.href);
         if (url.searchParams.has("code")) {
