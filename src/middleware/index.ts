@@ -2,7 +2,7 @@ import { createSupabaseServerInstance } from "@/db/supabase.client";
 import { defineMiddleware } from "astro:middleware";
 
 const PROTECTED_PATHS = ["/generate"];
-const AUTH_PATHS = ["/login", "/register", "/forgot-password", "/update-password"];
+const AUTH_PATHS = ["/login", "/register", "/forgot-password"];
 
 export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
   const supabase = createSupabaseServerInstance({
