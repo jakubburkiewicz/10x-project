@@ -3,6 +3,12 @@ import { defineMiddleware } from "astro:middleware";
 
 const PROTECTED_PATHS = ["/generate", "/cards"];
 const AUTH_PATHS = ["/login", "/register", "/forgot-password"];
+const AUTH_API_PATHS = [
+  "/api/auth/login",
+  "/api/auth/register",
+  "/api/auth/forgot-password",
+  "/api/auth/update-password",
+];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { locals, cookies, url, request, redirect } = context;
@@ -24,6 +30,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
   };
 
   if (url.pathname.startsWith("/api")) {
+    if (AUTH_API_PATHS.includes(url.pathname)) {
+      return next();
+    }
+
     if (!locals.session) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,

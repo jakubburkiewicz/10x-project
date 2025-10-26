@@ -56,7 +56,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
   }
 
-  return new Response(JSON.stringify({ user: data.user }), {
+  const { session, user } = data;
+
+  if (!session) {
+    return new Response(JSON.stringify({ error: "Brak sesji po zalogowaniu." }), {
+      status: 500,
+    });
+  }
+
+  const { error: sessionError } = await supabase.auth.setSession(session);
+
+  if (sessionError) {
+    return new Response(JSON.stringify({ error: "Nie udało się ustawić sesji." }), {
+      status: 500,
+    });
+  }
+
+  return new Response(JSON.stringify({ user }), {
     status: 200,
   });
 };
