@@ -3,7 +3,7 @@ main = "./dist/server/entry.mjs"
 compatibility_date = "2025-10-26"
 
 [site]
-bucket = "./dist"
+bucket = "./dist/client"
 
 [build]
 command = "npm run build"
