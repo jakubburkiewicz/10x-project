@@ -10,6 +10,9 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
     headers: request.headers,
   });
   locals.supabase = supabase;
+  locals.auth = {
+    getSession: supabase.auth.getSession.bind(supabase.auth),
+  };
 
   const {
     data: { user },
@@ -38,12 +41,10 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
   }
 
   if (user) {
-    locals.user = user;
     if (AUTH_PATHS.includes(url.pathname)) {
       return redirect("/generate");
     }
   } else {
-    locals.user = null;
     if (PROTECTED_PATHS.some((path) => url.pathname.startsWith(path))) {
       const redirectUrl = new URL(request.url);
       redirectUrl.pathname = "/login";

@@ -1,4 +1,4 @@
-import type { Tables, TablesInsert } from "@/db/database.types";
+import type { Tables } from "@/db/database.types";
 import { z } from "zod";
 
 /**
@@ -18,13 +18,18 @@ export type Card = Tables<"cards">;
 export type CardDto = Pick<Card, "id" | "front" | "back" | "source" | "due_date" | "created_at" | "updated_at">;
 
 /**
- * Command Model for creating a new card.
+ * DTO for creating a new card.
  * It includes only the fields required from the user.
  *
  * Used in:
  * - `POST /api/cards`
  */
-export type CreateCardCommand = Pick<TablesInsert<"cards">, "front" | "back" | "source">;
+export const CreateCardDtoSchema = z.object({
+  front: z.string().min(1, "Front is required.").max(200),
+  back: z.string().min(1, "Back is required.").max(500),
+  source: z.enum(["manual", "ai"]),
+});
+export type CreateCardDto = z.infer<typeof CreateCardDtoSchema>;
 
 /**
  * Command Model for updating an existing card.
