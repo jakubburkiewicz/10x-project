@@ -1,0 +1,10 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import CardsView from "@/components/views/cards/CardsView.tsx";
+---
+
+<Layout title="My Cards">
+  <main class="container mx-auto py-10">
+    <CardsView client:load />
+  </main>
+</Layout>
