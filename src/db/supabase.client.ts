@@ -12,7 +12,11 @@ interface CloudflareRuntime {
   };
 }
 
-export const createSupabaseServerInstance = (context: { cookies: AstroCookies; runtime?: CloudflareRuntime }) => {
+export const createSupabaseServerInstance = (context: {
+  cookies: AstroCookies;
+  runtime?: CloudflareRuntime;
+  headers?: Headers;
+}) => {
   // Cloudflare Pages runtime env variables
   const supabaseUrl = context.runtime?.env?.SUPABASE_URL || import.meta.env.SUPABASE_URL;
   const supabaseKey = context.runtime?.env?.SUPABASE_KEY || import.meta.env.SUPABASE_KEY;
