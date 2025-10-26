@@ -55,7 +55,7 @@ export async function GET({ locals, params }: APIContext): Promise<Response> {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "An internal server error occurred." }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
@@ -128,7 +128,6 @@ export async function PATCH({ params, request, locals }: APIContext): Promise<Re
         headers: { "Content-Type": "application/json" },
       });
     }
-    console.error("Error in PATCH /api/cards/[id]:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

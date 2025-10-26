@@ -1,13 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { LoginForm } from "@/components/auth/LoginForm";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 ---
 
 <Layout title="Logowanie">
@@ -15,9 +9,7 @@ import {
     <Card class="w-full max-w-md">
       <CardHeader class="text-center">
         <CardTitle>Witaj z powrotem!</CardTitle>
-        <CardDescription>
-          Zaloguj się, aby kontynuować generowanie fiszek.
-        </CardDescription>
+        <CardDescription> Zaloguj się, aby kontynuować generowanie fiszek. </CardDescription>
       </CardHeader>
       <CardContent>
         <LoginForm client:load />

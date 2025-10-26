@@ -1,14 +1,13 @@
 import type { APIContext } from "astro";
 import { GenerateCardsCommandSchema } from "@/types";
-import { rateLimiterService } from "@/lib/rate-limiter.service";
 import { aiService, LLMServiceError } from "@/lib/ai.service";
 
 export const prerender = false;
 
 export async function POST(context: APIContext): Promise<Response> {
+  /*
   const { user } = context.locals;
 
-  /*
   if (!user) {
     return new Response(JSON.stringify({ message: "Unauthorized" }), {
       status: 401,
@@ -49,7 +48,6 @@ export async function POST(context: APIContext): Promise<Response> {
       });
     }
 
-    console.error("Unexpected error in generate-cards endpoint:", error);
     return new Response(JSON.stringify({ message: "Internal Server Error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

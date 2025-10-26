@@ -52,9 +52,10 @@ const GenerateView = () => {
           isEditing: false,
         }))
       );
-    } catch (err: any) {
-      setError(err.message);
-      toast.error(err.message || "Wystąpił nieoczekiwany błąd.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd.";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -96,8 +97,9 @@ const GenerateView = () => {
       const data: SaveGeneratedCardsResponseDto = await response.json();
       toast.success(data.message);
       setSuggestions([]);
-    } catch (err: any) {
-      toast.error(err.message || "Wystąpił błąd podczas zapisywania fiszek.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Wystąpił błąd podczas zapisywania fiszek.";
+      toast.error(message);
     } finally {
       setIsSaving(false);
     }

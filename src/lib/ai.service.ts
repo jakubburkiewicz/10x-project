@@ -78,7 +78,7 @@ async function saveGeneratedCards(supabase: SupabaseClient, userId: string, comm
     });
 
     if (logError) {
-      console.error("Error logging AI generation:", logError);
+      throw new Error("Error logging AI generation:" + logError.message);
     }
 
     return { savedCards: [] };
@@ -102,7 +102,6 @@ async function saveGeneratedCards(supabase: SupabaseClient, userId: string, comm
   });
 
   if (error) {
-    console.error("Error in save_cards_and_log_generation RPC:", error);
     throw new Error("Failed to save generated cards and log generation.");
   }
 

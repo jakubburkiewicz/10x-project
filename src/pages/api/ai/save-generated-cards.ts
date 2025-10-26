@@ -5,7 +5,7 @@ import { aiService } from "@/lib/ai.service";
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  const { session, supabase, user } = locals;
+  const { supabase, user } = locals;
 
   /*
   if (!session || !user) {
@@ -30,8 +30,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       }),
       { status: 201 }
     );
-  } catch (error) {
-    console.error("Error saving generated cards:", error);
+  } catch {
     return new Response("Internal Server Error", { status: 500 });
   }
 };
