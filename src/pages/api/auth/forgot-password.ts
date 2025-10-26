@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { createSupabaseServerInstance } from "@/db/supabase.client";
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, cookies, locals }) => {
   const { email } = await request.json();
 
   if (!email) {
@@ -10,7 +10,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
+  const supabase = createSupabaseServerInstance({ cookies, headers: request.headers, runtime: locals.runtime });
 
   // Note: `site` is not available here, so we construct the URL manually.
   // This assumes the app is hosted at the root of the domain.
