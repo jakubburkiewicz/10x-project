@@ -33,6 +33,10 @@ export const createSupabaseServerInstance = (context: {
         context.cookies.delete(key, options);
       },
     },
+    auth: {
+      detectSessionInUrl: false, // Disable automatic code exchange on server
+      flowType: "pkce",
+    },
   });
 };
 
