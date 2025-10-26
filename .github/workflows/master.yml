@@ -48,9 +48,9 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          AI_PROVIDER: ${{ secrets.AI_PROVIDER }}
+          # OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          # ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # AI_PROVIDER: ${{ secrets.AI_PROVIDER }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
