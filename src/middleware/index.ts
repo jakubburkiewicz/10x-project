@@ -13,7 +13,7 @@ const AUTH_API_PATHS = [
 export const onRequest = defineMiddleware(async (context, next) => {
   const { locals, cookies, url, request, redirect } = context;
 
-  const supabase = createSupabaseServerInstance({ cookies });
+  const supabase = createSupabaseServerInstance({ cookies, runtime: context.locals.runtime });
   locals.supabase = supabase;
 
   const {

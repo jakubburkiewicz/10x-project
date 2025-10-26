@@ -5,8 +5,19 @@ import type { Database } from "@/db/database.types.ts";
 
 export type { SupabaseClient };
 
-export const createSupabaseServerInstance = (context: { cookies: AstroCookies }) => {
-  return createServerClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
+interface CloudflareRuntime {
+  env?: {
+    SUPABASE_URL?: string;
+    SUPABASE_KEY?: string;
+  };
+}
+
+export const createSupabaseServerInstance = (context: { cookies: AstroCookies; runtime?: CloudflareRuntime }) => {
+  // Cloudflare Pages runtime env variables
+  const supabaseUrl = context.runtime?.env?.SUPABASE_URL || import.meta.env.SUPABASE_URL;
+  const supabaseKey = context.runtime?.env?.SUPABASE_KEY || import.meta.env.SUPABASE_KEY;
+
+  return createServerClient<Database>(supabaseUrl, supabaseKey, {
     cookies: {
       get(key: string) {
         return context.cookies.get(key)?.value;
