@@ -135,3 +135,19 @@ export async function PATCH({ params, request, locals }: APIContext): Promise<Re
     });
   }
 }
+
+export async function DELETE({ params, locals }: APIContext) {
+  const { session, supabase } = locals;
+
+  if (!session?.user) {
+    return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 });
+  }
+
+  const cardId = params.id;
+
+  // TODO: Validate cardId is a valid UUID
+  // TODO: Call cardsService.deleteCard
+  // TODO: Handle service response and return appropriate status codes
+
+  return new Response(null, { status: 204 });
+}

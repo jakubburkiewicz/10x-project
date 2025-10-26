@@ -82,3 +82,24 @@ export async function updateCard(id: string, data: UpdateCardCommand, supabase: 
 
   return updatedCard;
 }
+
+/**
+ * Deletes a card for the current user.
+ *
+ * @param cardId - The ID of the card to delete.
+ * @param supabase - The Supabase client instance.
+ * @throws {CardNotFoundError} If the card is not found or the user does not have permission to delete it.
+ * @throws {Error} If there is a database error.
+ */
+export async function deleteCard(cardId: string, supabase: SupabaseClient) {
+  const { error, count } = await supabase.from("cards").delete({ count: "exact" }).eq("id", cardId);
+
+  if (error) {
+    throw new Error("Failed to delete card from the database.");
+  }
+
+  if (count === 0) {
+    // RLS prevents deletion, so the card either doesn't exist or doesn't belong to the user.
+    throw new CardNotFoundError();
+  }
+}
