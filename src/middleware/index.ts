@@ -15,11 +15,30 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
     data: { user },
   } = await supabase.auth.getUser();
 
+  const code = url.searchParams.get("code");
+
+  if (code) {
+    try {
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (error) throw error;
+      return redirect("/generate");
+    } catch {
+      const redirectUrl = new URL(url.origin);
+      redirectUrl.pathname = "/login";
+      redirectUrl.searchParams.set("error", "activation_failed");
+      return redirect(redirectUrl.toString());
+    }
+  }
+
+  if (url.pathname === "/") {
+    if (user) {
+      return redirect("/generate");
+    }
+    return redirect("/login");
+  }
+
   if (user) {
-    locals.user = {
-      email: user.email ?? "",
-      id: user.id,
-    };
+    locals.user = user;
     if (AUTH_PATHS.includes(url.pathname)) {
       return redirect("/generate");
     }
