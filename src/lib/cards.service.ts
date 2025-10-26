@@ -47,3 +47,59 @@ export async function getCardsForUser(
 
   return { data: data || [], totalCount: count || 0 };
 }
+
+/**
+ * Retrieves a single card by its ID for the authenticated user.
+ * RLS is expected to enforce ownership.
+ *
+ * @param supabase - The Supabase client instance.
+ * @param cardId - The UUID of the card to retrieve.
+ * @returns A promise that resolves to the CardDto if found, otherwise null.
+ */
+export async function getCardById(supabase: SupabaseClient, cardId: string): Promise<CardDto | null> {
+  const { data, error } = await supabase
+    .from("cards")
+    .select("id, front, back, source, due_date, created_at, updated_at")
+    .eq("id", cardId)
+    .single();
+
+  if (error) {
+    // PGRST116: "The result contains 0 rows" - this is the expected error when no card is found.
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    // For other errors, we should not expose internal details to the client.
+    // Logging them on the server is sufficient.
+    throw new Error("An unexpected error occurred while fetching the card.");
+  }
+
+  return data;
+}
+
+/**
+ * Retrieves a single card by its ID for the authenticated user.
+ * RLS is expected to enforce ownership.
+ *
+ * @param supabase - The Supabase client instance.
+ * @param cardId - The UUID of the card to retrieve.
+ * @returns A promise that resolves to the CardDto if found, otherwise null.
+ */
+export async function getCardById(supabase: SupabaseClient, cardId: string): Promise<CardDto | null> {
+  const { data, error } = await supabase
+    .from("cards")
+    .select("id, front, back, source, due_date, created_at, updated_at")
+    .eq("id", cardId)
+    .single();
+
+  if (error) {
+    // PGRST116: "The result contains 0 rows" - this is the expected error when no card is found.
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    // For other errors, log them and re-throw or handle as appropriate.
+    console.error("Error fetching card by ID:", error);
+    throw error;
+  }
+
+  return data;
+}
