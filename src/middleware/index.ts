@@ -1,23 +1,35 @@
+import { createSupabaseServerInstance } from "@/db/supabase.client";
 import { defineMiddleware } from "astro:middleware";
-import { supabaseClient } from "@/db/supabase.client";
 
-export const onRequest = defineMiddleware(async (context, next) => {
-  const accessToken = context.cookies.get("sb-access-token")?.value;
-  const refreshToken = context.cookies.get("sb-refresh-token")?.value;
+const PROTECTED_PATHS = ["/generate"];
+const AUTH_PATHS = ["/login", "/register", "/forgot-password", "/update-password"];
 
-  context.locals.supabase = supabaseClient;
-  context.locals.session = null;
-  context.locals.user = null;
+export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
+  const supabase = createSupabaseServerInstance({
+    cookies,
+    headers: request.headers,
+  });
+  locals.supabase = supabase;
 
-  if (accessToken && refreshToken) {
-    const { data } = await supabaseClient.auth.setSession({
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    if (data.session) {
-      context.locals.session = data.session;
-      context.locals.user = data.user;
+  if (user) {
+    locals.user = {
+      email: user.email ?? "",
+      id: user.id,
+    };
+    if (AUTH_PATHS.includes(url.pathname)) {
+      return redirect("/generate");
+    }
+  } else {
+    locals.user = null;
+    if (PROTECTED_PATHS.some((path) => url.pathname.startsWith(path))) {
+      const redirectUrl = new URL(request.url);
+      redirectUrl.pathname = "/login";
+      redirectUrl.searchParams.set("redirectedFrom", url.pathname);
+      return redirect(redirectUrl.toString());
     }
   }
 
