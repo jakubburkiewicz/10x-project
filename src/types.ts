@@ -131,6 +131,30 @@ export interface GetStudySessionResponseDto {
 }
 
 /**
+ * ViewModel for the Cards view.
+ * Represents the entire state of the main cards management view.
+ */
+export interface CardsViewModel {
+  cards: CardDto[];
+  pagination: GetCardsResponseDto["pagination"];
+  isLoading: boolean;
+  error: string | null;
+  activeFilters: {
+    query?: string;
+  };
+  sorting: {
+    column?: keyof CardDto;
+    direction?: "asc" | "desc";
+  };
+  dialogs: {
+    isCardFormOpen: boolean;
+    isDeleteConfirmationOpen: boolean;
+    cardToEdit: CardDto | null;
+    cardToDelete: CardDto | null;
+  };
+}
+
+/**
  * Command Model for submitting a card review during a study session.
  *
  * Used in:
