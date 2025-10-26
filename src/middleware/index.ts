@@ -43,19 +43,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  const code = url.searchParams.get("code");
-
-  if (code) {
-    try {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (error) throw error;
-      return redirect("/generate");
-    } catch {
-      const redirectUrl = new URL(url.origin);
-      redirectUrl.pathname = "/login";
-      redirectUrl.searchParams.set("error", "activation_failed");
-      return redirect(redirectUrl.toString());
-    }
+  // Allow homepage with code parameter for account activation
+  if (url.pathname === "/" && url.searchParams.has("code")) {
+    return next();
   }
 
   if (url.pathname === "/") {

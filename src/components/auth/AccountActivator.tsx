@@ -13,8 +13,10 @@ export const AccountActivator = () => {
         const url = new URL(window.location.href);
         if (url.searchParams.has("code")) {
           toast.success("Konto zostało pomyślnie aktywowane!");
-          url.searchParams.delete("code");
-          window.history.replaceState({}, document.title, url.toString());
+          // Redirect to /generate after successful activation
+          setTimeout(() => {
+            window.location.href = "/generate";
+          }, 1000);
         }
       }
     });
@@ -32,8 +34,10 @@ export const AccountActivator = () => {
         } catch (error) {
           const authError = error as AuthError;
           toast.error(`Błąd aktywacji konta: ${authError.message}`);
-          url.searchParams.delete("code");
-          window.history.replaceState({}, document.title, url.toString());
+          // Redirect to login on error
+          setTimeout(() => {
+            window.location.href = "/login?error=activation_failed";
+          }, 2000);
         }
       }
     };
