@@ -19,7 +19,7 @@ A modern web application for creating and managing educational flashcards, super
 
 **10x-cards** is designed to help users quickly create and manage sets of educational flashcards. The core feature of the application is its ability to leverage Large Language Models (LLMs) to automatically generate flashcard suggestions from any pasted text, such as a textbook chapter or an article.
 
-The primary goal is to solve the problem of manual, time-consuming flashcard creation, allowing students and learners to build high-quality study materials efficiently and embrace effective learning methods like spaced repetition with minimal effort.
+The primary goal is to solve the problem of manual, time-consuming flashcard creation, allowing students and learners to build high-quality study materials efficiently.
 
 ## Tech Stack
 
@@ -94,11 +94,10 @@ The following scripts are available in the `package.json`:
 -   **AI-Powered Flashcard Generation**: Users can paste text and receive AI-generated question-and-answer flashcards.
 -   **Manual Flashcard Management**: Full CRUD (Create, Read, Update, Delete) functionality for flashcards.
 -   **User Authentication**: Secure user registration and login to manage personal flashcard sets.
--   **Spaced Repetition Integration**: A simple mechanism to schedule flashcards for review based on a ready-to-use algorithm.
 
 ### Out of Scope (for MVP)
 
--   Advanced, custom-built spaced repetition algorithms.
+-   Spaced repetition algorithms.
 -   Gamification features.
 -   Native mobile applications (the project is web-only for now).
 -   Importing documents in formats like PDF or DOCX.
