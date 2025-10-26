@@ -13,7 +13,7 @@ const pathname = Astro.url.pathname;
 // Get Supabase public config from runtime or build-time env
 const supabaseUrl = runtime?.env?.SUPABASE_URL || import.meta.env.SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseAnonKey =
-  runtime?.env?.SUPABASE_ANON_KEY || import.meta.env.SUPABASE_ANON_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  runtime?.env?.SUPABASE_KEY || import.meta.env.SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 ---
 
 <!doctype html>

@@ -46,7 +46,7 @@ export const createSupabaseBrowserInstance = () => {
   const supabaseAnonKey =
     (typeof window !== "undefined" && window.__SUPABASE_ANON_KEY__) ||
     import.meta.env.PUBLIC_SUPABASE_ANON_KEY ||
-    import.meta.env.SUPABASE_ANON_KEY;
+    import.meta.env.SUPABASE_KEY;
 
   return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
 };
