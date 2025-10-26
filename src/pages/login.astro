@@ -1,0 +1,27 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { LoginForm } from "@/components/auth/LoginForm";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+---
+
+<Layout title="Logowanie">
+  <div class="container flex mx-auto h-screen w-screen flex-col items-center justify-center">
+    <Card class="w-full max-w-md">
+      <CardHeader class="text-center">
+        <CardTitle>Witaj z powrotem!</CardTitle>
+        <CardDescription>
+          Zaloguj się, aby kontynuować generowanie fiszek.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <LoginForm client:load />
+      </CardContent>
+    </Card>
+  </div>
+</Layout>

@@ -1,0 +1,27 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { RegisterForm } from "@/components/auth/RegisterForm";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+---
+
+<Layout title="Rejestracja">
+  <div class="container flex mx-auto h-screen w-screen flex-col items-center justify-center">
+    <Card class="w-full max-w-md">
+      <CardHeader class="text-center">
+        <CardTitle>Utwórz nowe konto</CardTitle>
+        <CardDescription>
+          Dołącz do nas i zacznij tworzyć fiszki w kilka sekund.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <RegisterForm client:load />
+      </CardContent>
+    </Card>
+  </div>
+</Layout>
