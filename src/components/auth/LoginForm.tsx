@@ -91,6 +91,11 @@ export function LoginForm() {
             </FormItem>
           )}
         />
+        <div className="flex items-center justify-end">
+          <a href="/forgot-password" className="text-sm text-primary hover:underline">
+            Zapomniałeś hasła?
+          </a>
+        </div>
         <Button type="submit" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? <Spinner /> : "Zaloguj się"}
         </Button>
