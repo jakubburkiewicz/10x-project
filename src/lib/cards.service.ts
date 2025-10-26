@@ -1,5 +1,12 @@
 import type { SupabaseClient } from "@/db/supabase.client";
-import type { CardDto } from "@/types";
+import type { CardDto, UpdateCardCommand } from "@/types";
+
+export class CardNotFoundError extends Error {
+  constructor(message = "Card not found or you don't have access to it") {
+    super(message);
+    this.name = "CardNotFoundError";
+  }
+}
 
 interface GetCardsParams {
   page: number;
@@ -49,57 +56,29 @@ export async function getCardsForUser(
 }
 
 /**
- * Retrieves a single card by its ID for the authenticated user.
- * RLS is expected to enforce ownership.
+ * Updates a card for the current user.
  *
+ * @param id - The ID of the card to update.
+ * @param data - The data to update the card with.
  * @param supabase - The Supabase client instance.
- * @param cardId - The UUID of the card to retrieve.
- * @returns A promise that resolves to the CardDto if found, otherwise null.
+ * @returns The updated card.
+ * @throws {CardNotFoundError} If the card is not found.
+ * @throws {Error} If there is an error updating the card.
  */
-export async function getCardById(supabase: SupabaseClient, cardId: string): Promise<CardDto | null> {
-  const { data, error } = await supabase
+export async function updateCard(id: string, data: UpdateCardCommand, supabase: SupabaseClient) {
+  const { data: updatedCard, error } = await supabase
     .from("cards")
+    .update(data)
+    .eq("id", id)
     .select("id, front, back, source, due_date, created_at, updated_at")
-    .eq("id", cardId)
     .single();
 
   if (error) {
-    // PGRST116: "The result contains 0 rows" - this is the expected error when no card is found.
-    if (error.code === "PGRST116") {
-      return null;
-    }
-    // For other errors, we should not expose internal details to the client.
-    // Logging them on the server is sufficient.
-    throw new Error("An unexpected error occurred while fetching the card.");
+    // RLS will prevent updates and return an empty data array, but the query itself doesn't error.
+    // The .single() method will then trigger an error if no row is found.
+    // We can interpret this as the card not being found for the current user.
+    throw new CardNotFoundError();
   }
 
-  return data;
-}
-
-/**
- * Retrieves a single card by its ID for the authenticated user.
- * RLS is expected to enforce ownership.
- *
- * @param supabase - The Supabase client instance.
- * @param cardId - The UUID of the card to retrieve.
- * @returns A promise that resolves to the CardDto if found, otherwise null.
- */
-export async function getCardById(supabase: SupabaseClient, cardId: string): Promise<CardDto | null> {
-  const { data, error } = await supabase
-    .from("cards")
-    .select("id, front, back, source, due_date, created_at, updated_at")
-    .eq("id", cardId)
-    .single();
-
-  if (error) {
-    // PGRST116: "The result contains 0 rows" - this is the expected error when no card is found.
-    if (error.code === "PGRST116") {
-      return null;
-    }
-    // For other errors, log them and re-throw or handle as appropriate.
-    console.error("Error fetching card by ID:", error);
-    throw error;
-  }
-
-  return data;
+  return updatedCard;
 }
