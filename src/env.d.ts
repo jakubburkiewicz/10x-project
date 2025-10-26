@@ -4,6 +4,11 @@ import type { Session, SupabaseClient, User } from "@supabase/supabase-js";
 import type { Database } from "./db/database.types.ts";
 
 declare global {
+  interface Window {
+    __SUPABASE_URL__?: string;
+    __SUPABASE_ANON_KEY__?: string;
+  }
+
   namespace App {
     interface Locals {
       supabase: SupabaseClient<Database>;
@@ -19,6 +24,7 @@ declare global {
         env?: {
           SUPABASE_URL?: string;
           SUPABASE_KEY?: string;
+          SUPABASE_ANON_KEY?: string;
         };
       };
     }

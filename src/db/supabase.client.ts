@@ -37,5 +37,16 @@ export const createSupabaseServerInstance = (context: {
 };
 
 export const createSupabaseBrowserInstance = () => {
-  return createBrowserClient<Database>(import.meta.env.PUBLIC_SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_ANON_KEY);
+  // Try to get values from window (injected by server), fallback to import.meta.env
+  const supabaseUrl =
+    (typeof window !== "undefined" && window.__SUPABASE_URL__) ||
+    import.meta.env.PUBLIC_SUPABASE_URL ||
+    import.meta.env.SUPABASE_URL;
+
+  const supabaseAnonKey =
+    (typeof window !== "undefined" && window.__SUPABASE_ANON_KEY__) ||
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY ||
+    import.meta.env.SUPABASE_ANON_KEY;
+
+  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
 };
