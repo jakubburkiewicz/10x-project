@@ -4,6 +4,3 @@ compatibility_date = "2025-10-26"
 
 [site]
 bucket = "./dist/client"
-
-[build]
-command = "npm run build"
