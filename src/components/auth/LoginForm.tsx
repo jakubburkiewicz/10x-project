@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { useState, useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -16,6 +17,15 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const [error, setError] = useState<string | null>(null);
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  }, [redirectUrl]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,14 +37,34 @@ export function LoginForm() {
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: Implement backend call
-    console.log(values);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setError(null);
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || "Wystąpił nieznany błąd.");
+        return;
+      }
+
+      const url = new URL(window.location.href);
+      const redirectedFrom = url.searchParams.get("redirectedFrom");
+      setRedirectUrl(redirectedFrom || "/generate");
+    } catch {
+      setError("Nie udało się połączyć z serwerem.");
+    }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         <FormField
           control={form.control}
           name="email"
