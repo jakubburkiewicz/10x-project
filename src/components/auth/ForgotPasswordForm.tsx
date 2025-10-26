@@ -62,26 +62,34 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Adres e-mail</FormLabel>
-              <FormControl>
-                <Input placeholder="jan.kowalski@example.com" {...field} type="email" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? <Spinner /> : "Zresetuj hasło"}
-        </Button>
-      </form>
-    </Form>
+    <div className="space-y-6">
+      <div className="text-center">
+        <h3 className="text-xl font-semibold tracking-tight">Zapomniałeś hasła?</h3>
+        <p className="text-sm text-muted-foreground">
+          Podaj swój adres e-mail, a wyślemy Ci link do zresetowania hasła.
+        </p>
+      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Adres e-mail</FormLabel>
+                <FormControl>
+                  <Input placeholder="jan.kowalski@example.com" {...field} type="email" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? <Spinner /> : "Zresetuj hasło"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }
